@@ -1,0 +1,45 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+data = pd.read_csv("student_performance.csv")
+
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = KNeighborsClassifier(n_neighbors=3)
+
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+print("Training Dataset\n")
+print(data)
+
+print("\nActual Output:")
+print(list(y_test))
+
+print("\nPredicted Output:")
+print(list(pred))
+
+print("\nAccuracy:")
+print(str(round(accuracy_score(y_test, pred) * 100, 2)) + "%")
+
+new_sample = pd.DataFrame({
+    "StudyHours": [6],
+    "Attendance": [85],
+    "Assignment": [75]
+})
+
+prediction = model.predict(new_sample)
+
+print("\nNew Sample")
+print("[6, 85, 75]")
+
+print("\nPrediction:")
+print(prediction[0])
