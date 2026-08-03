@@ -1,0 +1,23 @@
+import pandas as pd
+import numpy as np
+
+data = pd.read_csv("candidate_dataset.csv")
+
+concepts = np.array(data.iloc[:, :-1])
+target = np.array(data.iloc[:, -1])
+
+specific_h = None
+
+for i in range(len(target)):
+    if target[i] == "Yes":
+        if specific_h is None:
+            specific_h = concepts[i].copy()
+
+print("Training Dataset:\n")
+print(data)
+
+print("\nSpecific Hypothesis (S):")
+print(specific_h)
+
+print("\nGeneral Hypothesis (G):")
+print("No General Hypothesis")
