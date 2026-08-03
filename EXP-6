@@ -1,0 +1,48 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+data = pd.read_csv("heart_disease.csv")
+
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Training Dataset\n")
+print(data)
+
+print("\nActual Output:")
+print(list(y_test))
+
+print("\nPredicted Output:")
+print(list(y_pred))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nAccuracy:")
+print(str(round(accuracy_score(y_test, y_pred) * 100, 2)) + "%")
+
+new_sample = pd.DataFrame({
+    "Age": [46],
+    "BP": [141],
+    "Cholesterol": [223],
+    "HeartRate": [83]
+})
+
+prediction = model.predict(new_sample)
+
+print("\nNew Sample")
+print([46, 141, 223, 83])
+
+print("\nPrediction:")
+print(prediction[0])
