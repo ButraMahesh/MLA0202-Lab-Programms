@@ -1,0 +1,52 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+data = pd.read_csv("student_result.csv")
+
+X = data.iloc[:, :-1]
+y = data.iloc[:, -1]
+
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = MLPClassifier(
+    hidden_layer_sizes=(5,),
+    activation='logistic',
+    solver='sgd',
+    learning_rate_init=0.1,
+    max_iter=5000,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+pred = model.predict(X_test)
+
+print("Training Dataset\n")
+print(data)
+
+print("\nActual Output:")
+print(list(y_test))
+
+print("\nPredicted Output:")
+print(list(pred))
+
+print("\nAccuracy:")
+print(round(accuracy_score(y_test, pred) * 100, 2), "%")
+
+new_sample = scaler.transform([[6, 85, 75]])
+prediction = model.predict(new_sample)
+
+print("\nNew Sample: [6, 85, 75]")
+
+if prediction[0] == 1:
+    print("Prediction: Pass")
+else:
+    print("Prediction: Fail")
