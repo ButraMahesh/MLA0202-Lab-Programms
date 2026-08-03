@@ -1,0 +1,23 @@
+import pandas as pd
+
+data = pd.read_csv("finds_dataset (2).csv")
+
+print("Training Dataset:\n")
+print(data)
+
+attributes = data.columns[:-1]
+target = data.columns[-1]
+
+hypothesis = None
+
+for _, row in data.iterrows():
+    if row[target] == "Yes":
+        if hypothesis is None:
+            hypothesis = list(row[attributes])
+        else:
+            for i in range(len(hypothesis)):
+                if hypothesis[i] != row[attributes[i]]:
+                    hypothesis[i] = "?"
+
+print("\nFinal Hypothesis:")
+print(hypothesis)
