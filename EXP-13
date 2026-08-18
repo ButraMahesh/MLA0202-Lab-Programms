@@ -1,0 +1,43 @@
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
+
+print("Name: B Mahesh")
+print("Register Number: 192425338")
+print()
+
+data = pd.DataFrame({
+    "Year": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2014, 2017, 2019, 2021],
+    "Kilometers": [80000, 70000, 60000, 50000, 40000, 30000, 20000, 10000,
+                   90000, 55000, 35000, 15000],
+    "Price": [450000, 500000, 550000, 600000, 700000, 800000,
+              900000, 1000000, 400000, 580000, 720000, 950000]
+})
+
+X = data[["Year", "Kilometers"]]
+y = data["Price"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+error = mean_absolute_error(y_test, y_pred)
+
+new_car = [[2020, 25000]]
+predicted_price = model.predict(new_car)
+
+print("Car Price Prediction Model")
+print("--------------------------")
+print("Mean Absolute Error:", round(error, 2))
+print()
+print("New Car Details:")
+print("Year       : 2020")
+print("Kilometers : 25000")
+print()
+print("Predicted Car Price: Rs.", round(predicted_price[0], 2))
