@@ -1,0 +1,48 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+print("Name: B Mahesh")
+print("Register Number: 192425338")
+print()
+
+data = pd.DataFrame({
+    "Age": [22, 25, 28, 35, 40, 45, 50, 55, 30, 38, 42, 48],
+    "Income": [20000, 25000, 30000, 45000, 60000, 70000, 80000, 90000, 40000, 55000, 65000, 75000],
+    "Loan": [15000, 20000, 25000, 30000, 25000, 20000, 15000, 10000, 28000, 22000, 18000, 12000],
+    "Credit_Score": ["Poor", "Poor", "Poor", "Average", "Average", "Good",
+                     "Good", "Good", "Average", "Average", "Good", "Good"]
+})
+
+X = data[["Age", "Income", "Loan"]]
+y = data["Credit_Score"]
+
+encoder = LabelEncoder()
+y = encoder.fit_transform(y)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+new_customer = [[32, 50000, 20000]]
+prediction = model.predict(new_customer)
+
+credit_score = encoder.inverse_transform(prediction)
+
+print("Model Accuracy:", round(accuracy * 100, 2), "%")
+print()
+print("New Customer Details:")
+print("Age      : 32")
+print("Income   : 50000")
+print("Loan     : 20000")
+print()
+print("Predicted Credit Score:", credit_score[0])
