@@ -1,0 +1,71 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+data = {
+    "Age": [25, 35, 45, 30, 50, 28, 40, 55, 32, 48,
+            26, 38, 52, 29, 42, 36, 31, 47, 54, 27],
+    "Income": [25000, 50000, 75000, 40000, 90000, 30000, 65000, 100000,
+               45000, 80000, 28000, 60000, 95000, 35000, 70000, 55000,
+               42000, 85000, 110000, 27000],
+    "LoanAmount": [100000, 200000, 300000, 150000, 400000, 120000,
+                   250000, 500000, 180000, 350000, 110000, 220000,
+                   450000, 130000, 280000, 200000, 160000, 320000,
+                   550000, 100000],
+    "CreditScore": [650, 720, 780, 680, 800, 640, 750, 820, 700, 770,
+                    620, 730, 790, 660, 760, 710, 690, 780, 810, 630],
+    "LoanTerm": [12, 24, 36, 24, 48, 12, 36, 60, 24, 48,
+                 12, 36, 48, 24, 36, 24, 24, 48, 60, 12],
+    "LoanApproved": ["No", "Yes", "Yes", "Yes", "Yes", "No", "Yes",
+                     "Yes", "Yes", "Yes", "No", "Yes", "Yes", "No",
+                     "Yes", "Yes", "No", "Yes", "Yes", "No"]
+}
+
+df = pd.DataFrame(data)
+
+print("BANK LOAN DATASET")
+print(df)
+
+X = df[["Age", "Income", "LoanAmount", "CreditScore", "LoanTerm"]]
+
+encoder = LabelEncoder()
+y = encoder.fit_transform(df["LoanApproved"])
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = GaussianNB()
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("\nMODEL PERFORMANCE")
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+print("\nClassification Report:")
+print(classification_report(
+    y_test,
+    y_pred,
+    target_names=encoder.classes_
+))
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+new_applicant = [[35, 60000, 200000, 740, 24]]
+
+prediction = model.predict(new_applicant)
+
+print("\nNEW APPLICANT")
+print("Age: 35")
+print("Income: 60000")
+print("Loan Amount: 200000")
+print("Credit Score: 740")
+print("Loan Term: 24 months")
+
+print("\nLoan Prediction:",
+      encoder.inverse_transform(prediction)[0])
